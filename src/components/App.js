@@ -9,7 +9,13 @@ class App extends Component {
       <Fragment>
         <Navbar />
         <div className="container">
-          <Feeds />
+          <div className="row">
+            <div className="col-sm">
+              <Feeds />
+            </div>
+            <div className="col-sm">Items</div>
+            <div className="col-sm">Item</div>
+          </div>
         </div>
       </Fragment>
     );
