@@ -12,7 +12,9 @@
       <link>https://overreacted.io/fix-like-no-ones-watching/</link>
       <guid isPermaLink="false">https://overreacted.io/fix-like-no-ones-watching/</guid>
       <pubDate>Fri, 15 Feb 2019 00:00:00 GMT</pubDate>
-      <content:encoded>&lt;p&gt;Some technical debt is in plain sight.&lt;/p&gt;
+      <content:encoded>
+        &lt;img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onload="console.log('i has xss');"&gt;
+        &lt;p&gt;Some technical debt is in plain sight.&lt;/p&gt;
 &lt;p&gt;An inadequate data structure might lead to convoluted code. When the requirements keep changing, the code might contain traces of previous approaches. Sometimes the code is written in a hurry or is just sloppy.&lt;/p&gt;
 &lt;p&gt;This kind of technical debt is easy to discuss because it’s highly visible. It manifests as bugs, performance problems, and difficulties adding features.&lt;/p&gt;
 &lt;p&gt;There is another, more insidious kind of technical debt.&lt;/p&gt;
