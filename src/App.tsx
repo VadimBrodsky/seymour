@@ -22,7 +22,7 @@ export default function App() {
 
   return (
     <main>
-      {feed.channel.items.map((item) => (
+      {feed.channel.items.slice(0,1).map((item) => (
         <article key={item.guid}>
           <header>
             <h1>{item.title}</h1>
