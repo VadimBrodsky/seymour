@@ -1,7 +1,7 @@
 const getText = (node: Element | null): string =>
   node && node.textContent ? node.textContent : '';
 
-export default function rssParser(feed: string) {
+export default function rssParser(feed: string): Channel {
   const parser = new DOMParser();
   const doc = parser.parseFromString(feed, 'application/xml');
 
@@ -20,5 +20,22 @@ export default function rssParser(feed: string) {
         content: getText(item.querySelector('encoded')),
       })),
     },
+  };
+}
+
+export interface Channel {
+  channel: {
+    title: string;
+    description: string;
+    link: string;
+    lastBuildDate: number;
+    items?: {
+      title: string;
+      description: string;
+      link: string;
+      guid: string;
+      pubDate: number;
+      content: string;
+    }[];
   };
 }
