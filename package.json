@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prestart": "yarn pre-css",
     "start": "react-scripts start",
+    "pre-css": "tailwind build src/stylesheets/index.css -c ./tailwind.js -o src/stylesheets/tailwind.css --no-autoprefixer",
+    "prebuild": "yarn pre-css",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
