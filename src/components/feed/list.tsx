@@ -3,19 +3,19 @@ import { Channel } from '../../services/rss-parser';
 
 interface Props {
   items: Channel['channel']['items'];
-  onSelect: (item: string) => any;
+  dispatchSelect: (item: string) => unknown;
 }
 
-export default function FeedList({ items = [], onSelect }: Props) {
+export default function FeedList({ items = [], dispatchSelect }: Props) {
   return (
     <ul className="list-reset">
       {items.map((item) => (
-        <li key={item.guid} className="py-3 text-sm border-b-2 border-grey border-solid">
+        <li key={item.guid} className="text-sm border-b-2 border-grey border-solid">
           <a
             href="#"
-            className="no-underline text-black"
+            className="no-underline text-black py-3 block "
             onClick={(e) => {
-              onSelect(item.guid);
+              dispatchSelect(item.guid);
             }}
           >
             {item.title}
