@@ -21,7 +21,7 @@ export default function Frame({ markup }: { markup: string }) {
       styles.innerText = 'body { margin: 0; padding: 0 0.75rem 0 0.75rem; }';
       iframeDoc.head.appendChild(styles);
     }
-  }, []);
+  }, [markup]);
 
   return (
     // @ts-ignore
