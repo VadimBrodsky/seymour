@@ -15,6 +15,11 @@ export default function Frame({ markup }: { markup: string }) {
       const base = document.createElement('base');
       base.target = "_blank";
       iframeDoc.head.appendChild(base);
+      iframeDoc.body.id = 'article';
+
+      const styles = document.createElement('style');
+      styles.innerText = 'body { margin: 0; padding: 0 0.75rem 0 0.75rem; }';
+      iframeDoc.head.appendChild(styles);
     }
   }, []);
 
@@ -25,6 +30,7 @@ export default function Frame({ markup }: { markup: string }) {
       allowtransparency="allowtransparency"
       sandbox="allow-same-origin allow-popups"
       ref={iframeEl}
+      className="w-full flex-grow scrolling-touch"
     />
   );
 }

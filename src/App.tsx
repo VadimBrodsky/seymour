@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
 import fetcher from './services/fetcher';
 import rssParser, { Channel } from './services/rss-parser';
 import Content from './components/item/content';
@@ -21,15 +19,35 @@ export default function App() {
   }
 
   return (
-    <main>
-      {feed.channel.items.slice(0,3).map((item) => (
-        <article key={item.guid}>
-          <header>
-            <h1>{item.title}</h1>
-            <Content markup={item.content} />
-          </header>
-        </article>
-      ))}
+    <main className="flex h-screen">
+      <nav className="w-1/6 bg-grey overflow-y-auto overflow-x-hidden p-3">
+        <header>
+          <h1 className="text-lg">Seymour</h1>
+        </header>
+      </nav>
+      <section className="w-1/3 bg-grey-light overflow-y-auto scroling-touch p-3">
+        <header>
+          <h1 className="text-lg">Overreacted</h1>
+        </header>
+        <ul className="list-reset">
+          {feed.channel.items.map((item) => (
+            <li
+              key={item.guid}
+              className="py-3 text-sm border-b-2 border-grey border-solid"
+            >
+              <a href="#" className="no-underline text-black">
+                {item.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <article className="w-1/2 bg-white flex flex-col">
+        <header className="p-3">
+          <h1 className="text-lg">{feed.channel.items[0].title}</h1>
+        </header>
+        <Content markup={feed.channel.items[0].content} />
+      </article>
     </main>
   );
 }
