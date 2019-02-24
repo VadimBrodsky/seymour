@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import fetcher from './services/fetcher';
 import rssParser from './services/rss-parser';
 
@@ -43,13 +43,13 @@ export default function App() {
     <Router>
       <Chrome>
         <Route
-          path="/feed"
+          path="/:feed_name"
           component={() => (
             <Feed feedItems={feed.channel.items} dispatchSelect={handleSelectedFeed} />
           )}
         />
         <Route
-          path="/feed/:id"
+          path="/:feed_name/:id"
           component={() => (
             <Article title={currentArticle.title} content={currentArticle.content} />
           )}
