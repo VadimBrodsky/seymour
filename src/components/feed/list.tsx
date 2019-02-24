@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Channel } from '../../services/rss-parser';
 
 interface Props {
   items: Channel['channel']['items'];
