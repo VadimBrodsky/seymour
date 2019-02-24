@@ -23,19 +23,3 @@ export default function rssParser(feed: string): Channel {
   };
 }
 
-export interface Channel {
-  channel: {
-    title: string;
-    description: string;
-    link: string;
-    lastBuildDate: number;
-    items?: {
-      title: string;
-      description: string;
-      link: string;
-      guid: string;
-      pubDate: number;
-      content: string;
-    }[];
-  };
-}
