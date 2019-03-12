@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Link } from 'react-router-dom';
 import fetcher from './services/fetcher';
 import rssParser from './services/rss-parser';
 
 import Chrome from './components/chrome';
-import Feed from './components/feed';
+import FeedMenu from './components/feed';
 import Article from './components/article';
 
 type Article = ArrayElement<Channel['channel']['items']>;
 
 export default function App() {
   const [feed, setFeed] = useState({} as Channel);
-  const [selectedArticleId, setSelecedArticleId] = useState('');
 
   useEffect(() => {
     fetcher('/test.rss.xml').then((feed) => {
@@ -30,15 +29,6 @@ export default function App() {
     );
   }
 
-  const selectedArticle = feed.channel.items.find(
-    (item) => item.guid === selectedArticleId,
-  );
-  const currentArticle: Article = selectedArticle
-    ? selectedArticle
-    : feed.channel.items[0];
-
-  const handleSelectedFeed = (item: string) => setSelecedArticleId(item);
-
   return (
     <Router>
       <Chrome>
@@ -49,10 +39,28 @@ export default function App() {
           )}
         />
         <Route
-          path="/:feed_name/:id"
-          component={() => (
-            <Article title={currentArticle.title} content={currentArticle.content} />
-          )}
+          path="/:feedId"
+          render={(...props) => <FeedMenu {...props} feedItems={feed.channel.items} />}
+        />
+        <Route
+          path="/:feedId/:articleId"
+          render={({ match }) => {
+            if (!feed || !feed.channel || !feed.channel.items) {
+              return <p>nothing</p>;
+            }
+
+            const selectedArticle = feed.channel.items.find(
+              (item) => item.id === match.params.articleId,
+            );
+
+            const currentArticle: Article = selectedArticle
+              ? selectedArticle
+              : feed.channel.items[0];
+
+            return (
+              <Article title={currentArticle.title} content={currentArticle.content} />
+            );
+          }}
         />
       </Chrome>
     </Router>
