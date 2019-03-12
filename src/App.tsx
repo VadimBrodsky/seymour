@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Redirect, Link } from 'react-router-dom
 import fetcher from './services/fetcher';
 import rssParser from './services/rss-parser';
 
+import Navigation from './components/chrome/navigation';
 import Chrome from './components/chrome';
 import FeedMenu from './components/feed';
 import Article from './components/article';
@@ -33,9 +34,11 @@ export default function App() {
     <Router>
       <Chrome>
         <Route
-          path="/:feed_name"
-          component={() => (
-            <Feed feedItems={feed.channel.items} dispatchSelect={handleSelectedFeed} />
+          path="/"
+          render={() => (
+            <Navigation>
+              <Link to="/overreacted">Overreacted</Link>
+            </Navigation>
           )}
         />
         <Route
