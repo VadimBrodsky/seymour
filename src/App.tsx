@@ -37,16 +37,16 @@ export default function App() {
           path="/"
           render={() => (
             <Navigation>
-              <Link to="/overreacted">Overreacted</Link>
+              <Link to="/channel/overreacted">Overreacted</Link>
             </Navigation>
           )}
         />
         <Route
-          path="/:feedId"
+          path="/channel/:feedId"
           render={(...props) => <FeedMenu {...props} feedItems={feed.channel.items} />}
         />
         <Route
-          path="/:feedId/:articleId"
+          path="/channel/:feedId/:articleId"
           render={({ match }) => {
             if (!feed || !feed.channel || !feed.channel.items) {
               return <p>nothing</p>;
