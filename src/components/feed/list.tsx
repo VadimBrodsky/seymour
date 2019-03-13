@@ -1,27 +1,25 @@
 import * as React from 'react';
-import { Channel } from '../../services/rss-parser';
+import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 
-interface Props {
+interface Props extends RouteComponentProps {
   items: Channel['channel']['items'];
-  dispatchSelect: (item: string) => unknown;
 }
 
-export default function FeedList({ items = [], dispatchSelect }: Props) {
+function FeedList({ items = [], match }: Props) {
   return (
     <ul className="list-reset">
       {items.map((item) => (
-        <li key={item.guid} className="text-sm border-b-2 border-grey border-solid">
-          <a
-            href="#"
+        <li key={item.id} className="text-sm border-b-2 border-grey border-solid">
+          <Link
+            to={`${match.url}/${item.id}`}
             className="no-underline text-black py-3 block "
-            onClick={(e) => {
-              dispatchSelect(item.guid);
-            }}
           >
             {item.title}
-          </a>
+          </Link>
         </li>
       ))}
     </ul>
   );
 }
+
+export default withRouter(FeedList);
