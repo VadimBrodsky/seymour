@@ -53,7 +53,7 @@ export default function App() {
             }
 
             const selectedArticle = feed.channel.items.find(
-              (item) => item.id === match.params.articleId,
+              (item) => item.slug === match.params.articleId,
             );
 
             const currentArticle: Article = selectedArticle

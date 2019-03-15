@@ -9,9 +9,9 @@ function FeedList({ items = [], match }: Props) {
   return (
     <ul className="list-reset">
       {items.map((item) => (
-        <li key={item.id} className="text-sm border-b-2 border-grey border-solid">
+        <li key={item.slug} className="text-sm border-b-2 border-grey border-solid">
           <Link
-            to={`${match.url}/${item.id}`}
+            to={`${match.url}/${item.slug}`}
             className="no-underline text-black py-3 block "
           >
             {item.title}
