@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import './stylesheets/tailwind.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import DB from './services/db';
+import seedData from './services/seed';
 
-DB.channels.set({name: 'overreacted', url: 'https://overreacted.io/'})
+//@ts-ignore
+window.seedData = seedData;
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

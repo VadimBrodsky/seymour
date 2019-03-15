@@ -1,6 +1,7 @@
 import { openDb } from 'idb';
 
 const DB_NAME = 'seymour';
+const READ_WRITE = 'readwrite';
 
 const dbPromise = openDb(DB_NAME, 1, (upgradeDB) => {
   switch (upgradeDB.oldVersion) {
@@ -8,6 +9,8 @@ const dbPromise = openDb(DB_NAME, 1, (upgradeDB) => {
       upgradeDB.createObjectStore('channels', { autoIncrement: true });
       upgradeDB.createObjectStore('items', { autoIncrement: true });
   }
+}).catch((e) => {
+  console.log(e);
 });
 
 class Database {
@@ -15,15 +18,21 @@ class Database {
     this.store = store;
   }
 
-  // @ts-ignore
-  public async set(data) {
+  public async set(data: { [key: string]: unknown }) {
     const db = await dbPromise;
-    const tx = await db.transaction(this.store, 'readwrite');
-    tx.objectStore(this.store).put(data);
-    return tx.complete;
+
+    if (!db) {
+      return Promise.reject();
+    }
+
+    const tx = db.transaction(this.store, READ_WRITE);
+    const id = await tx.objectStore(this.store).add(data);
+
+    return tx.complete.then(() => id);
   }
 }
 
 export default {
   channels: new Database('channels'),
+  items: new Database('items'),
 };
