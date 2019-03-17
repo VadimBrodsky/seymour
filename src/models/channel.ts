@@ -1,12 +1,9 @@
 import DB from '../utils/db';
 
-interface ChannleConstructor {
-  title: string;
-  slug: string;
-  description: string;
-  link: string;
-  lastBuildDate: number;
-}
+type ChannleConstructor = Pick<
+  Channel,
+  'title' | 'slug' | 'description' | 'link' | 'lastBuildDate'
+>;
 
 export default class Channel {
   public title: string;
@@ -14,17 +11,17 @@ export default class Channel {
   public description: string;
   public link: string;
   public lastBuildDate: number;
-  public lastFetched: number;
+  public readonly lastFetched: number;
   protected id: IDBValidKey | undefined;
 
   private static db: DB = (Channel.db = new DB('channels'));
 
-  constructor({ title, slug, description, link, lastBuildDate }: ChannleConstructor) {
-    this.title = title;
-    this.slug = slug;
-    this.description = description;
-    this.link = link;
-    this.lastBuildDate = lastBuildDate;
+  constructor(options: ChannleConstructor) {
+    this.title = options.title;
+    this.slug = options.slug;
+    this.description = options.description;
+    this.link = options.link;
+    this.lastBuildDate = options.lastBuildDate;
     this.lastFetched = Date.now();
   }
 

@@ -1,21 +1,23 @@
-import { openDb } from 'idb';
+import { openDb, UpgradeDB } from 'idb';
+import { DB_NAME, DB_VERSION } from './config';
 
-const DB_NAME = 'seymour';
 const READ_WRITE = 'readwrite';
+const dbPromise = openDb(DB_NAME, DB_VERSION, migrateDb).catch((e) => {
+  console.warn(e);
+});
 
-const dbPromise = openDb(DB_NAME, 1, (upgradeDB) => {
+
+function migrateDb(upgradeDB: UpgradeDB) {
   switch (upgradeDB.oldVersion) {
     case 0:
       const channelStore = upgradeDB.createObjectStore('channels', {
         autoIncrement: true,
       });
-      const itemsStore = upgradeDB.createObjectStore('items', { autoIncrement: true });
 
+      const itemsStore = upgradeDB.createObjectStore('items', { autoIncrement: true });
       itemsStore.createIndex('channel', 'channelId', { unique: false });
   }
-}).catch((e) => {
-  console.log(e);
-});
+};
 
 export default class Database {
   constructor(private store: string) {

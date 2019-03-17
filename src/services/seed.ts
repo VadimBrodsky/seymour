@@ -1,6 +1,7 @@
 import fetcher from './fetcher';
 import rssParser from './rss-parser';
 import Channel from '../models/channel';
+import Item from '../models/item';
 import DB from '../utils/db';
 
 async function fetchData() {
@@ -18,14 +19,7 @@ async function fetchData() {
   const channel = new Channel({ title, slug, description, link, lastBuildDate });
   const channelId = await channel.create();
 
-  items && items.forEach((item) => {
-    db.create({
-      channelId,
-      read: false,
-      ...item
-    });
-  });
-
+  items && items.forEach((item) => new Item({ channelId, ...item }).create());
 }
 
 export default async function seedData() {
@@ -33,6 +27,8 @@ export default async function seedData() {
   const di = new DB('items');
 
   false && fetchData();
+
+  // debugger;
 }
 
 false && seedData();
