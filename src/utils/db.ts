@@ -6,7 +6,6 @@ const dbPromise = openDb(DB_NAME, DB_VERSION, migrateDb).catch((e) => {
   console.warn(e);
 });
 
-
 function migrateDb(upgradeDB: UpgradeDB) {
   switch (upgradeDB.oldVersion) {
     case 0:
@@ -17,7 +16,7 @@ function migrateDb(upgradeDB: UpgradeDB) {
       const itemsStore = upgradeDB.createObjectStore('items', { autoIncrement: true });
       itemsStore.createIndex('channel', 'channelId', { unique: false });
   }
-};
+}
 
 export default class Database {
   constructor(private store: string) {
