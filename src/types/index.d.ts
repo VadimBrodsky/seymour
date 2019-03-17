@@ -4,8 +4,8 @@ type ArrayElement<ArrayType> = ArrayType extends (infer ElementType)[]
 
 interface Channel {
   channel: {
-    id: string;
     title: string;
+    slug: string;
     description: string;
     link: string;
     lastBuildDate: number;
@@ -13,7 +13,7 @@ interface Channel {
       content: string;
       description: string;
       guid: string;
-      id: string;
+      slug: string;
       link: string;
       pubDate: number;
       title: string;
