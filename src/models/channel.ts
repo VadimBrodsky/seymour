@@ -1,4 +1,4 @@
-import DB from '../services/db';
+import DB from '../utils/db';
 
 interface ChannleConstructor {
   title: string;

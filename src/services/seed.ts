@@ -1,7 +1,7 @@
 import fetcher from './fetcher';
 import rssParser from './rss-parser';
 import Channel from '../models/channel';
-import DB from './db';
+import DB from '../utils/db';
 
 async function fetchData() {
   const feed = await fetcher('/test.rss.xml');
