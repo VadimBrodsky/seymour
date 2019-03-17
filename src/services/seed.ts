@@ -1,31 +1,38 @@
-import DB from './db';
 import fetcher from './fetcher';
 import rssParser from './rss-parser';
+import Channel from '../models/channel';
+import DB from './db';
 
-export default async function seedData() {
+async function fetchData() {
   const feed = await fetcher('/test.rss.xml');
 
   if (!feed) {
     return;
   }
 
-  const { channel } = rssParser(feed);
-  const { title, slug, description, link, lastBuildDate, items } = channel;
+  const {
+    channel: { title, slug, description, link, lastBuildDate, items },
+  } = rssParser(feed);
 
-  const channelId = await DB.channels.set({
-    title,
-    slug,
-    description,
-    link,
-    lastBuildDate,
-    lastFetched: Date.now(),
-  });
+  const db = new DB('items');
+  const channel = new Channel({ title, slug, description, link, lastBuildDate });
+  const channelId = await channel.create();
 
   items && items.forEach((item) => {
-    DB.items.set({
+    db.create({
       channelId,
       read: false,
       ...item
     });
   });
+
 }
+
+export default async function seedData() {
+  const ci = new DB('channels');
+  const di = new DB('items');
+
+  false && fetchData();
+}
+
+false && seedData();
