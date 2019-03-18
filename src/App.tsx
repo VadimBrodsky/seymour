@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+
 import { BrowserRouter as Router, Route, Redirect, Link } from 'react-router-dom';
 import fetcher from './services/fetcher';
 import rssParser from './services/rss-parser';
 
+import { handleReceiveChannels } from './actions/channels'
 import Navigation from './components/chrome/navigation';
 import Chrome from './components/chrome';
 import FeedMenu from './components/feed';
@@ -10,16 +14,18 @@ import Article from './components/article';
 
 type Article = ArrayElement<Channel['channel']['items']>;
 
-export default function App() {
+function App({ dispatch }: { dispatch: Dispatch}) {
   const [feed, setFeed] = useState({} as Channel);
 
   useEffect(() => {
-    fetcher('/test.rss.xml').then((feed) => {
-      if (feed) {
-        const data = rssParser(feed);
-        setFeed(data);
-      }
-    });
+    // @ts-ignore
+    dispatch(handleReceiveChannels())
+    // fetcher('/test.rss.xml').then((feed) => {
+    //   if (feed) {
+    //     const data = rssParser(feed);
+    //     setFeed(data);
+    //   }
+    // });
   }, []);
 
   if (!feed.channel || !feed.channel.items) {
@@ -69,3 +75,5 @@ export default function App() {
     </Router>
   );
 }
+
+export default connect()(App);
