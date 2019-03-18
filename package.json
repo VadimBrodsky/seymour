@@ -12,6 +12,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "dexie": "^2.0.4",
     "idb": "^3.0.2",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
