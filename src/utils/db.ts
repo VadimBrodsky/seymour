@@ -77,6 +77,17 @@ export default class Database {
     return tx.complete;
   }
 
+  public async getAll() {
+    const db = await dbPromise;
+
+    if (!db) {
+      return Promise.reject();
+    }
+
+    const tx = db.transaction(this.store);
+    return tx.objectStore(this.store).getAll();
+  }
+
   public async getAllByIndex(indexName: string, key: IDBKeyRange) {
     const db = await dbPromise;
 

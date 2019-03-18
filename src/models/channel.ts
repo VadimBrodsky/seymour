@@ -37,6 +37,10 @@ export default class Channel {
     return this.id;
   }
 
+  static async getAll() {
+    return Channel.db.getAll();
+  }
+
   static async getById(id: IDBValidKey) {
     return Channel.db.read(id).then((data) => {
       const c = new Channel(data);
