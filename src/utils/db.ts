@@ -85,7 +85,17 @@ export default class Database {
     }
 
     const tx = db.transaction(this.store);
-    return tx.objectStore(this.store).getAll();
+    const keys = tx.objectStore(this.store).getAllKeys();
+    const data = tx.objectStore(this.store).getAll();
+    // @ts-ignore
+    return Promise.all([keys, data]).then(
+      // @ts-ignore
+      // FIXME: this only works because there is only 1 channel
+      // TODO: use own id instead of idb autoIncrement one
+      ([[key], [data]]) => {
+        return { [key]: data }
+      } ,
+    );
   }
 
   public async getAllByIndex(indexName: string, key: IDBKeyRange) {
