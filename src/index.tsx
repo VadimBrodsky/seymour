@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import './stylesheets/tailwind.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import seedData from './services/seed';
+
+//@ts-ignore
+window.seedData = seedData;
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
