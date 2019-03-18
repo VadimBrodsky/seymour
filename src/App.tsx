@@ -14,7 +14,8 @@ import Article from './components/article';
 
 type Article = ArrayElement<Channel['channel']['items']>;
 
-function App({ dispatch }: { dispatch: Dispatch}) {
+// @ts-ignore
+function App({ dispatch }) {
   const [feed, setFeed] = useState({} as Channel);
 
   useEffect(() => {
