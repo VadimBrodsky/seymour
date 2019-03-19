@@ -4,6 +4,9 @@ import './stylesheets/tailwind.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import seedData from './services/seed';
+import db from './models/pouch' ;
+
+console.log(db);
 
 //@ts-ignore
 window.seedData = seedData;
