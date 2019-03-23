@@ -1,6 +1,6 @@
 import { Action, ActionCreator } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import Channel from '../models/channel';
+import db from '../services/db';
 
 export const RECEIVE_CHANNELS = 'RECEIVE_CHANNELS';
 export const SET_SELECTED_CHANNEL = 'SET_SELECTED_CHANNEL';
@@ -15,10 +15,9 @@ export const receiveChannels: ActionCreator<Action> = (channels: Channel[]) => (
 });
 
 export const handleReceiveChannels = () => {
-  return (dispatch: ThunkDispatch<State, void, Action>) => {
-    Channel.getAll().then((channels) => {
-      dispatch(receiveChannels(channels));
-    });
+  return async (dispatch: ThunkDispatch<State, void, Action>) => {
+    const channels = await db.channels.toArray();
+    dispatch(receiveChannels(channels));
   };
 };
 

@@ -6,7 +6,7 @@ export default function channels(state = {}, action) {
     case RECEIVE_CHANNELS:
       return {
         ...state,
-        channels: action.channels,
+        loaded: action.channels,
       };
     case SET_SELECTED_CHANNEL:
       return {
