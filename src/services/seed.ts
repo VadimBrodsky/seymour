@@ -13,10 +13,6 @@ async function fetchData() {
     channel: { title, slug, description, link, lastBuildDate, items },
   } = rssParser(feed);
 
-  console.log('fetched');
-  console.log(db);
-
-  console.log('populate');
 
   const channelId = await db.channels.add({
     title,
@@ -26,8 +22,6 @@ async function fetchData() {
     lastBuildDate,
     lastFetched: Date.now(),
   });
-
-  console.log(channelId);
 
   if (items) {
     const itemsWithRel = items.map((i) => ({
@@ -42,7 +36,6 @@ async function fetchData() {
 
 export default async function seedData() {
   false && fetchData();
-  // debugger;
 }
 
 false && seedData();
