@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Redirect, Link } from 'react-router-dom
 import fetcher from './services/fetcher';
 import rssParser from './services/rss-parser';
 
-import { handleReceiveChannels } from './actions/channels'
+import { handleReceiveChannels } from './actions/channels';
 import Navigation from './components/chrome/navigation';
 import Chrome from './components/chrome';
 import FeedMenu from './components/feed';
@@ -15,21 +15,15 @@ import Article from './components/article';
 type Article = ArrayElement<Channel['channel']['items']>;
 
 // @ts-ignore
-function App({ dispatch }) {
+function App(props) {
   const [feed, setFeed] = useState({} as Channel);
 
   useEffect(() => {
-    // @ts-ignore
-    dispatch(handleReceiveChannels())
-    // fetcher('/test.rss.xml').then((feed) => {
-    //   if (feed) {
-    //     const data = rssParser(feed);
-    //     setFeed(data);
-    //   }
-    // });
+    props.dispatchReceiveChannels();
   }, []);
 
-  if (!feed.channel || !feed.channel.items) {
+
+  if (!props.channels) {
     return (
       <div className="flex items-center justify-center h-screen">
         <p>Loading...</p>
@@ -44,7 +38,11 @@ function App({ dispatch }) {
           path="/"
           render={() => (
             <Navigation>
-              <Link to="/channel/overreacted">Overreacted</Link>
+              {
+            // @ts-ignore
+                props.channels.map((channel) => (
+                <Link key={channel.id} to={`/channel/${channel.slug}`}>{channel.title}</Link>
+              ))}
             </Navigation>
           )}
         />
@@ -77,4 +75,13 @@ function App({ dispatch }) {
   );
 }
 
-export default connect()(App);
+// @ts-ignore
+const mapStateToProps = (state) => ({ channels: state.channels.loaded });
+// @ts-ignore
+const mapDispatchToProps = (dispatch) => ({
+  dispatchReceiveChannels: () => dispatch(handleReceiveChannels()),
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(App);
