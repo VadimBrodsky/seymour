@@ -1,8 +1,6 @@
 import fetcher from './fetcher';
 import rssParser from './rss-parser';
-import Channel from '../models/channel';
-import Item from '../models/item';
-import DB from '../utils/db';
+import db from '../services/db';
 
 async function fetchData() {
   const feed = await fetcher('/test.rss.xml');
@@ -15,19 +13,35 @@ async function fetchData() {
     channel: { title, slug, description, link, lastBuildDate, items },
   } = rssParser(feed);
 
-  const db = new DB('items');
-  const channel = new Channel({ title, slug, description, link, lastBuildDate });
-  const channelId = await channel.create();
+  console.log('fetched');
+  console.log(db);
 
-  items && items.forEach((item) => new Item({ channelId, ...item }).create());
+  console.log('populate');
+
+  const channelId = await db.channels.add({
+    title,
+    slug,
+    description,
+    link,
+    lastBuildDate,
+    lastFetched: Date.now(),
+  });
+
+  console.log(channelId);
+
+  if (items) {
+    const itemsWithRel = items.map((i) => ({
+      ...i,
+      channelId,
+      fetchDate: Date.now(),
+      read: false,
+    }));
+    db.items.bulkAdd(itemsWithRel);
+  }
 }
 
 export default async function seedData() {
-  const ci = new DB('channels');
-  const di = new DB('items');
-
   false && fetchData();
-
   // debugger;
 }
 
