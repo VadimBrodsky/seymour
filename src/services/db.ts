@@ -1,11 +1,13 @@
 import Dexie from 'dexie';
+import {DB_NAME} from '../utils/config';
+
 
 class DB extends Dexie {
   public channels: Dexie.Table<Channel, number>;
   public items: Dexie.Table<Item, number>;
 
   constructor() {
-    super('seymour');
+    super(DB_NAME);
     this.version(1).stores({
       channels: '++id',
       items: '++id,channelId',
