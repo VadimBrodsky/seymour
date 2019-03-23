@@ -1,6 +1,5 @@
 import Dexie from 'dexie';
-import {DB_NAME} from '../utils/config';
-
+import { DB_NAME } from '../utils/config';
 
 class DB extends Dexie {
   public channels: Dexie.Table<Channel, number>;
