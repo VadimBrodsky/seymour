@@ -8,7 +8,7 @@ class DB extends Dexie {
     super('seymour');
     this.version(1).stores({
       channels: '++id',
-      items: '++id channelId',
+      items: '++id,channelId',
     });
 
     this.channels = this.table('channels');
