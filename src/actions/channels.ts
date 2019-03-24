@@ -5,6 +5,7 @@ import db from '../services/db';
 export const RECEIVE_CHANNELS = 'RECEIVE_CHANNELS';
 export const SET_SELECTED_CHANNEL = 'SET_SELECTED_CHANNEL';
 
+// @FIXME
 interface State {
   title: string;
 }

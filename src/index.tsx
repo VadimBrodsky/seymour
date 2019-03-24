@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
 import './stylesheets/tailwind.css';
 import App from './App';
 import reducer from './reducers';
@@ -13,12 +15,15 @@ import seedData from './services/seed';
 window.seedData = seedData;
 const store = createStore(reducer, middleware);
 
-ReactDOM.render(
+type AppStore = typeof store;
+
+const Root = ({ store }: { store: AppStore }) => (
   <Provider store={store}>
     <App />
-  </Provider>,
-  document.getElementById('root'),
+  </Provider>
 );
+
+ReactDOM.render(<Root store={store} />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

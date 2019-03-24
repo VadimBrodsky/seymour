@@ -6,7 +6,7 @@ export default function items(state = {}, action) {
     case RECEIVE_ITEMS:
       return {
         ...state,
-        ...action.items,
+        loaded: action.items,
       };
     default:
       return state;
