@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Content from './content';
+import Frame from './frame';
 
 interface Props {
   title: string;
@@ -12,7 +12,7 @@ export default function ArticleContainer({ title, content }: Props) {
       <header className="p-3">
         <h1 className="text-lg">{title}</h1>
       </header>
-      <Content markup={content} />
+      <Frame markup={content} title={title} />
     </article>
   );
 }

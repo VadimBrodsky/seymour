@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export default function Frame({ markup }: { markup: string }) {
+export default function Frame({ title, markup }: { title: string, markup: string }) {
   const iframeEl = React.useRef(null);
 
   React.useEffect(() => {
@@ -26,6 +26,7 @@ export default function Frame({ markup }: { markup: string }) {
   return (
     // @ts-ignore
     <iframe
+      title={title}
       csp="default-src 'self'"
       allowtransparency="allowtransparency"
       sandbox="allow-same-origin allow-popups"
