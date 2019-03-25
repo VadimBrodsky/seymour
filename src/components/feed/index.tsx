@@ -6,20 +6,13 @@ import { handleReceiveItems } from '../../actions/items';
 
 interface Props extends RouteComponentProps {
   items: Channel['channel']['items'];
-  channels: any[];
   dispatch: any;
+  selectedChannel: any;
 }
 
-function FeedMenu({ items, match, channels, dispatch }: Props) {
-  const currentFeed = channels.find(
-    // @ts-ignore
-    (channel: any) => channel.slug === match.params.feedId,
-  );
-
+function FeedMenu({ items, match, dispatch, selectedChannel }: Props) {
   React.useEffect(() => {
-    if (currentFeed.id) {
-      dispatch(handleReceiveItems(currentFeed.id));
-    }
+    selectedChannel.id && dispatch(handleReceiveItems(selectedChannel.id));
   }, []);
 
   return (
@@ -27,7 +20,7 @@ function FeedMenu({ items, match, channels, dispatch }: Props) {
       <header>
         <h1 className="text-lg">
           <Link className="no-underline text-black" to={match.url}>
-            {currentFeed.title}
+            {selectedChannel.title}
           </Link>
         </h1>
         {items ? <FeedList items={items} /> : <p>loading...</p>}
@@ -37,8 +30,11 @@ function FeedMenu({ items, match, channels, dispatch }: Props) {
 }
 
 // @ts-ignore
-const mapStateToProps = (state) => ({
-  channels: state.channels.loaded,
+const mapStateToProps = (state, props) => ({
   items: state.items.loaded,
+  selectedChannel: state.channels.loaded.find(
+    (channel: any) => channel.slug === props.match.params.feedId,
+  ),
 });
-export default connect(mapStateToProps)(withRouter(FeedMenu));
+
+export default withRouter(connect(mapStateToProps)(FeedMenu));

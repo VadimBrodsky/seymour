@@ -45,23 +45,7 @@ function App(props) {
 
         <Route
           path="/channel/:feedId/:articleId"
-          render={({ match }) => {
-            if (!props.channels || !props.items) {
-              return <p>loading...</p>;
-            }
-
-            const selectedArticle = props.items.find(
-              (item: any) => item.slug === match.params.articleId,
-            );
-
-            const currentArticle: Article = selectedArticle
-              ? selectedArticle
-              : props.items[0];
-
-            return (
-              <Article title={currentArticle.title} content={currentArticle.content} />
-            );
-          }}
+          render={(...props) => <Article {...props} />}
         />
       </Chrome>
     </Router>

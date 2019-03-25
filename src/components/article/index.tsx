@@ -1,18 +1,30 @@
 import * as React from 'react';
-import Content from './content';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
+import ArticleContainer from './container';
 
 interface Props {
-  title: string;
-  content: string;
+  channels: any;
+  items: any;
+  selectedArticle: any;
 }
 
-export default function Article({ title, content }: Props) {
-  return (
-    <article className="w-1/2 bg-white flex flex-col">
-      <header className="p-3">
-        <h1 className="text-lg">{title}</h1>
-      </header>
-      <Content markup={content} />
-    </article>
-  );
+function Article({ selectedArticle }: Props) {
+  if (! selectedArticle) {
+    return <p>loading...</p>;
+  }
+
+  // const currentArticle = selectedArticle ? selectedArticle : items[0];
+  return <ArticleContainer title={selectedArticle.title} content={selectedArticle.content} />;
 }
+
+// @ts-ignore
+function mapStateToProps(state, props) {
+  return {
+    selectedArticle:
+      state.items.loaded &&
+      state.items.loaded.find((item: any) => item.slug === props.match.params.articleId),
+  };
+}
+
+export default withRouter(connect(mapStateToProps)(Article));
