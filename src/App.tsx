@@ -8,16 +8,19 @@ import Navigation from './components/chrome/navigation';
 import Chrome from './components/chrome';
 import FeedMenu from './components/feed';
 import Article from './components/article';
+import { AppState, RootActions } from './reducers'
 
-type Article = ArrayElement<Channel['channel']['items']>;
+interface Props {
+  channels: AppState['channels']['loaded'];
+  dispatch: Dispatch<any>;
+}
 
-// @ts-ignore
-function App(props) {
+function App({ channels, dispatch }: Props) {
   useEffect(() => {
-    props.dispatch(handleReceiveChannels());
+    dispatch(handleReceiveChannels());
   }, []);
 
-  if (!props.channels) {
+  if (!channels) {
     return (
       <div className="flex items-center justify-center h-screen">
         <p>Loading...</p>
@@ -28,33 +31,13 @@ function App(props) {
   return (
     <Router>
       <Chrome>
-        <Route
-          path="/"
-          render={() => (
-            <Navigation>
-              {props.channels.map((channel: any) => (
-                <Link key={channel.id} to={`/channel/${channel.slug}`}>
-                  {channel.title}
-                </Link>
-              ))}
-            </Navigation>
-          )}
-        />
-
-        <Route path="/channel/:feedId" render={(...props) => <FeedMenu {...props} />} />
-
-        <Route
-          path="/channel/:feedId/:articleId"
-          render={(...props) => <Article {...props} />}
-        />
+        <Route path="/" component={Navigation} />
+        <Route path="/channel/:feedId" component={FeedMenu} />
+        <Route path="/channel/:feedId/:articleId" component={Article} />
       </Chrome>
     </Router>
   );
 }
 
-// @ts-ignore
-const mapStateToProps = (state) => ({
-  channels: state.channels.loaded,
-  items: state.items.loaded,
-});
+const mapStateToProps = (state: AppState) => ({ channels: state.channels.loaded });
 export default connect(mapStateToProps)(App);
