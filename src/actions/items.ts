@@ -15,7 +15,7 @@ export function receiveItems(items: Item[]) {
 
 // Thunks
 export const handleReceiveItems = (channelId: string) => {
-  async (dispatch: ThunkDispatch<State, void, Action>) => {
+  return async (dispatch: ThunkDispatch<State, void, Action>) => {
     const items = await db.items.where({ channelId }).toArray();
     dispatch(receiveItems(items));
   };

@@ -13,7 +13,7 @@ export const receiveChannels = (channels: Channel[]) => ({
 
 // Thunks
 export const handleReceiveChannels = () => {
-  async (dispatch: ThunkDispatch<State, void, Action>) => {
+  return async (dispatch: ThunkDispatch<State, void, Action>) => {
     const channels = await db.channels.toArray();
     dispatch(receiveChannels(channels));
   };
