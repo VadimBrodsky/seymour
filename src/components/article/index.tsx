@@ -10,7 +10,7 @@ interface Props {
 }
 
 function Article({ selectedArticle }: Props) {
-  if (! selectedArticle) {
+  if (!selectedArticle) {
     return <p>loading...</p>;
   }
 

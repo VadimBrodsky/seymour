@@ -4,11 +4,13 @@ import { Dispatch } from 'redux';
 import { BrowserRouter as Router, Route, Redirect, Link } from 'react-router-dom';
 
 import { handleReceiveChannels } from './actions/channels';
+import { handleReceiveItems } from './actions/items';
+
 import Navigation from './components/chrome/navigation';
 import Chrome from './components/chrome';
 import FeedMenu from './components/feed';
 import Article from './components/article';
-import { AppState, RootActions } from './reducers'
+import { AppState, RootActions } from './reducers';
 
 interface Props {
   channels: AppState['channels']['loaded'];
