@@ -1,18 +1,12 @@
-import { RECEIVE_CHANNELS, SET_SELECTED_CHANNEL } from '../actions/channels';
+import { RECEIVE_CHANNELS, State, Actions } from '../actions/channels';
 
-// @ts-ignore
-export default function channels(state = {}, action) {
+export default function channels(state: State = { loaded: [] }, action: Actions) {
   switch (action.type) {
     case RECEIVE_CHANNELS:
       return {
         ...state,
         loaded: action.channels,
       };
-    case SET_SELECTED_CHANNEL:
-      return {
-        ...state,
-        selectedChannel: action.selectedChannel,
-      }
     default:
       return state;
   }

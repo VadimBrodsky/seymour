@@ -1,7 +1,6 @@
-import { RECEIVE_ITEMS } from '../actions/items';
+import { RECEIVE_ITEMS, State, Actions } from '../actions/items';
 
-// @ts-ignore
-export default function items(state = {}, action) {
+export default function items(state: State = { loaded: [] }, action: Actions) {
   switch (action.type) {
     case RECEIVE_ITEMS:
       return {

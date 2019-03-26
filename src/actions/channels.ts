@@ -1,30 +1,27 @@
-import { Action, ActionCreator } from 'redux';
+import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import db from '../services/db';
+import db, { Channel } from '../services/db';
 
+// Actions
 export const RECEIVE_CHANNELS = 'RECEIVE_CHANNELS';
-export const SET_SELECTED_CHANNEL = 'SET_SELECTED_CHANNEL';
 
-// @FIXME
-interface State {
-  title: string;
-}
-
-export const receiveChannels: ActionCreator<Action> = (channels: Channel[]) => ({
+// Action Creators
+export const receiveChannels = (channels: Channel[]) => ({
   type: RECEIVE_CHANNELS,
   channels,
 });
 
+// Thunks
 export const handleReceiveChannels = () => {
-  return async (dispatch: ThunkDispatch<State, void, Action>) => {
+  async (dispatch: ThunkDispatch<State, void, Action>) => {
     const channels = await db.channels.toArray();
     dispatch(receiveChannels(channels));
   };
 };
 
-export function setSelectedChannel(channelId: number) {
-  return {
-    type: SET_SELECTED_CHANNEL,
-    selectedChannel: channelId,
-  };
+// Types
+export interface State {
+  loaded: Channel[];
 }
+
+export type Actions = ReturnType<typeof receiveChannels>;
