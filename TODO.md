@@ -5,6 +5,7 @@
 - [X] Global state - Redux
 - [ ] Background fetching via web / service worker
 - [ ] Add feeds
+- [ ] Read / Unread marker and filter
 - [X] Persistance - IndexDB
 - [ ] Night mode
 - [ ] Dashboard
