@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { BrowserRouter as Router, Route, Redirect, Link } from 'react-router-dom';
-
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { handleReceiveChannels } from './actions/channels';
 import { handleReceiveItems } from './actions/items';
-
-import Navigation from './components/chrome/navigation';
+import Article from './components/article';
 import Chrome from './components/chrome';
 import FeedMenu from './components/feed';
-import Article from './components/article';
+import Loading from './components/shared/loading';
+import Sidebar from './components/sidebar';
 import { AppState, RootActions } from './reducers';
 
 interface Props {
@@ -23,17 +22,13 @@ function App({ channels, dispatch }: Props) {
   }, []);
 
   if (!channels) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p>Loading...</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
     <Router>
       <Chrome>
-        <Route path="/" component={Navigation} />
+        <Route path="/" component={Sidebar} />
         <Route path="/channel/:feedId" component={FeedMenu} />
         <Route path="/channel/:feedId/:articleId" component={Article} />
       </Chrome>

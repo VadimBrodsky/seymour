@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export default function Frame({ title, markup }: { title: string, markup: string }) {
+export default function ArticleFrame({ title, markup }: { title: string, markup: string }) {
   const iframeEl = React.useRef(null);
 
   React.useEffect(() => {

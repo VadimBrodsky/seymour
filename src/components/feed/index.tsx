@@ -1,56 +1,59 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import FeedList from './list';
 import { handleReceiveItems } from '../../actions/items';
+import FeedList from './list';
+import FeedsWrapper from './wrapper';
+import FeedsHeader from './header';
+import Loading from '../shared/loading';
+import { AppState } from '../../reducers';
 
 interface Props extends RouteComponentProps {
-  items: Channel['channel']['items'];
   dispatch: any;
-  selectedChannel?: any;
-
-  channelId: string;
-  channelTitle: string;
-  loading: boolean;
+  channel?: AppState['channels']['loaded'][0];
+  items?: AppState['items']['loaded'];
 }
 
-function FeedMenu({ items, match, dispatch, channelTitle, channelId, loading }: Props) {
-  if (loading) {
-    return <p>loading...</p>;
+function Feeds({ channel, dispatch, items, match }: Props) {
+  React.useEffect(
+    () => {
+      channel && dispatch(handleReceiveItems(channel.id));
+    },
+    [channel],
+  );
+
+  return !items || !channel ? (
+    <Loading />
+  ) : (
+    <FeedsWrapper>
+      <FeedsHeader title={channel.title} url={match.url} />
+      <FeedList items={items} baseUrl={match.url} />
+    </FeedsWrapper>
+  );
+}
+
+const mapStateToProps = (
+  state: AppState,
+  props: RouteComponentProps<{ feedId: string }>,
+) => {
+  let channel;
+  let items;
+
+  if (state.channels.loaded.length > 0) {
+    const fallbackId = state.channels.loaded[0];
+    const foundChannel = state.channels.loaded.find(
+      (channel: typeof state.channels.loaded[0]) =>
+        channel.slug === props.match.params.feedId,
+    );
+
+    channel = foundChannel ? foundChannel : fallbackId;
   }
 
-  React.useEffect(() => {
-    dispatch(handleReceiveItems(channelId));
-  }, [channelId]);
+  if (state.items.loaded.length > 0) {
+    items = state.items.loaded;
+  }
 
-  return (
-    <section className="w-1/3 bg-grey-light overflow-y-auto scroling-touch p-3">
-      <header>
-        <h1 className="text-lg">
-          <Link className="no-underline text-black" to={match.url}>
-            {channelTitle}
-          </Link>
-        </h1>
-        {items ? <FeedList items={items} /> : <p>loading...</p>}
-      </header>
-    </section>
-  );
-}
-
-// @ts-ignore
-const mapStateToProps = (state, props) => {
-  const foundArticle = state.channels.loaded.find(
-    (channel: any) => channel.slug === props.match.params.feedId,
-  );
-
-  const fallbackId = state.channels.loaded.length ? state.channels.loaded[0].id : null;
-
-  return {
-    items: state.items.loaded,
-    channelId: foundArticle ? foundArticle.id : fallbackId,
-    channelTitle: foundArticle ? foundArticle.title : '',
-    loading: !foundArticle && !fallbackId,
-  };
+  return { channel, items };
 };
 
-export default withRouter(connect(mapStateToProps)(FeedMenu));
+export default withRouter(connect(mapStateToProps)(Feeds));

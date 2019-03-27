@@ -1,18 +1,20 @@
 import * as React from 'react';
-import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { AppState } from '../../reducers';
 
-interface Props extends RouteComponentProps {
-  items: Channel['channel']['items'];
+interface Props {
+  items: AppState['items']['loaded'];
+  baseUrl: string;
 }
 
-function FeedList({ items = [], match }: Props) {
+export default function FeedList({ items, baseUrl }: Props) {
   return (
     <ul className="list-reset">
       {items.map((item) => (
         <li key={item.slug} className="text-sm border-b-2 border-grey border-solid">
           <Link
-            to={`${match.url}/${item.slug}`}
-            className="no-underline text-black py-3 block "
+            to={`${baseUrl}/${item.slug}`}
+            className="no-underline text-black py-3 block"
           >
             {item.title}
           </Link>
@@ -21,5 +23,3 @@ function FeedList({ items = [], match }: Props) {
     </ul>
   );
 }
-
-export default withRouter(FeedList);
