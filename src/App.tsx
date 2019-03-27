@@ -1,71 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Redirect, Link } from 'react-router-dom';
-import fetcher from './services/fetcher';
-import rssParser from './services/rss-parser';
-
-import Navigation from './components/chrome/navigation';
-import Chrome from './components/chrome';
-import FeedMenu from './components/feed';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { handleReceiveChannels } from './actions/channels';
 import Article from './components/article';
+import Chrome from './components/chrome';
+import Feeds from './components/feed';
+import Sidebar from './components/sidebar';
+import { AppState } from './reducers';
 
-type Article = ArrayElement<Channel['channel']['items']>;
+interface Props {
+  channels: AppState['channels']['loaded'];
+  dispatch: Dispatch<any>;
+}
 
-export default function App() {
-  const [feed, setFeed] = useState({} as Channel);
-
+function App({ channels, dispatch }: Props) {
   useEffect(() => {
-    fetcher('/test.rss.xml').then((feed) => {
-      if (feed) {
-        const data = rssParser(feed);
-        setFeed(data);
-      }
-    });
+    dispatch(handleReceiveChannels());
   }, []);
-
-  if (!feed.channel || !feed.channel.items) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p>Loading...</p>
-      </div>
-    );
-  }
 
   return (
     <Router>
       <Chrome>
-        <Route
-          path="/"
-          render={() => (
-            <Navigation>
-              <Link to="/channel/overreacted">Overreacted</Link>
-            </Navigation>
-          )}
-        />
-        <Route
-          path="/channel/:feedId"
-          render={(...props) => <FeedMenu {...props} feedItems={feed.channel.items} />}
-        />
-        <Route
-          path="/channel/:feedId/:articleId"
-          render={({ match }) => {
-            if (!feed || !feed.channel || !feed.channel.items) {
-              return <p>nothing</p>;
-            }
-
-            const selectedArticle = feed.channel.items.find(
-              (item) => item.slug === match.params.articleId,
-            );
-
-            const currentArticle: Article = selectedArticle
-              ? selectedArticle
-              : feed.channel.items[0];
-
-            return (
-              <Article title={currentArticle.title} content={currentArticle.content} />
-            );
-          }}
-        />
+        <Route path="/" component={Sidebar} />
+        <Route path="/channel/:feedId" component={Feeds} />
+        <Route path="/channel/:feedId/:articleId" component={Article} />
       </Chrome>
     </Router>
   );
 }
+
+const mapStateToProps = (state: AppState) => ({ channels: state.channels.loaded });
+export default connect(mapStateToProps)(App);

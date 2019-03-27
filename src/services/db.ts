@@ -17,7 +17,7 @@ class DB extends Dexie {
   }
 }
 
-interface Channel {
+export interface Channel {
   id?: number;
   title: string;
   slug: string;
@@ -27,7 +27,7 @@ interface Channel {
   lastFetched: number;
 }
 
-interface Item {
+export interface Item {
   id?: number;
   channelId: number;
   content: string;
