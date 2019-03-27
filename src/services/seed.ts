@@ -12,10 +12,7 @@ async function fetchData() {
     return;
   }
 
-  const {
-    channel: { title, slug, description, link, lastBuildDate, items },
-  } = rssParser(feed);
-
+  const { title, slug, description, link, lastBuildDate, items } = rssParser(feed);
 
   const channelId = await db.channels.add({
     title,
