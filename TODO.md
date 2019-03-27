@@ -2,8 +2,18 @@
 
 - [X] UI
 - [X] Router
-- [ ] Global state - Redux
+- [X] Global state - Redux
 - [ ] Background fetching via web / service worker
-- [ ] Persistance - IndexDB
+- [ ] Add feeds
+- [X] Persistance - IndexDB
 - [ ] Night mode
 - [ ] Dashboard
+- [ ] Feed Validation / CORS check
+- [ ] Stars / Read Later
+- [ ] Settings
+- [ ] Refresh Button
+- [ ] Themes
+- [ ] Distraction Free Mode
+- [ ] Sync to server / other clients
+- [ ] Server fetch
+- [ ] Common liks aggregator
