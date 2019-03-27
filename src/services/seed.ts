@@ -1,9 +1,12 @@
 import fetcher from './fetcher';
 import rssParser from './rss-parser';
 import db from '../services/db';
+import { SEED_URL } from '../utils/config';
 
 async function fetchData() {
-  const feed = await fetcher('/test.rss.xml');
+  // const feedUrl = SEED_URL;
+  const feedUrl = 'https://overreacted.io/rss.xml';
+  const feed = await fetcher(feedUrl);
 
   if (!feed) {
     return;
@@ -16,6 +19,7 @@ async function fetchData() {
 
   const channelId = await db.channels.add({
     title,
+    feedUrl,
     slug,
     description,
     link,
@@ -35,7 +39,7 @@ async function fetchData() {
 }
 
 export default async function seedData() {
-  false && fetchData();
+  true && fetchData();
 }
 
 false && seedData();

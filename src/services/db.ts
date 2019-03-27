@@ -20,6 +20,7 @@ class DB extends Dexie {
 export interface Channel {
   id?: number;
   title: string;
+  feedUrl: string;
   slug: string;
   description: string;
   link: string;
