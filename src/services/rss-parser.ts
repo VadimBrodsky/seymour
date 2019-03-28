@@ -1,7 +1,7 @@
 const getText = (node: Element | null): string =>
   node && node.textContent ? node.textContent : '';
 
-export default function rssParser(feed: string): Channel {
+export default function rssParser(feed: string): RSSChannel {
   const parser = new DOMParser();
   const doc = parser.parseFromString(feed, 'application/xml');
 
@@ -23,19 +23,21 @@ export default function rssParser(feed: string): Channel {
   };
 }
 
-interface Channel {
+export interface RSSChannel {
   title: string;
   slug: string;
   description: string;
   link: string;
   lastBuildDate: number;
-  items?: {
-    content: string;
-    description: string;
-    guid: string;
-    slug: string;
-    link: string;
-    pubDate: number;
-    title: string;
-  }[];
+  items?: RSSItem[];
+}
+
+export interface RSSItem {
+  content: string;
+  description: string;
+  guid: string;
+  slug: string;
+  link: string;
+  pubDate: number;
+  title: string;
 }

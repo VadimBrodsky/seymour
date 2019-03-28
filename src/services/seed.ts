@@ -29,7 +29,7 @@ async function fetchData() {
       ...i,
       channelId,
       fetchDate: Date.now(),
-      read: false,
+      read: 0 as 0,
     }));
     db.items.bulkAdd(itemsWithRel);
   }
