@@ -9,7 +9,7 @@ class DB extends Dexie {
     super(DB_NAME);
     this.version(1).stores({
       channels: '++id',
-      items: '++id,channelId',
+      items: '++id,channelId,guid',
     });
 
     this.channels = this.table('channels');
@@ -20,6 +20,7 @@ class DB extends Dexie {
 export interface Channel {
   id?: number;
   title: string;
+  feedUrl: string;
   slug: string;
   description: string;
   link: string;
@@ -37,7 +38,7 @@ export interface Item {
   pubDate: number;
   slug: string;
   title: string;
-  read: boolean;
+  read: 0 | 1;
   fetchDate: number;
 }
 

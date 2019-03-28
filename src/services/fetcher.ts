@@ -8,6 +8,6 @@ export default async function fetcher(url: string) {
 
     return await res.text();
   } catch (e) {
-    console.error('Failed to fetch');
+    console.error('Failed to fetch', e);
   }
 }

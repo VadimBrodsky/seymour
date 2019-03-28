@@ -1,21 +1,22 @@
 import fetcher from './fetcher';
 import rssParser from './rss-parser';
 import db from '../services/db';
+import { SEED_URL } from '../utils/config';
 
 async function fetchData() {
-  const feed = await fetcher('/test.rss.xml');
+  // const feedUrl = SEED_URL;
+  const feedUrl = 'https://overreacted.io/rss.xml';
+  const feed = await fetcher(feedUrl);
 
   if (!feed) {
     return;
   }
 
-  const {
-    channel: { title, slug, description, link, lastBuildDate, items },
-  } = rssParser(feed);
-
+  const { title, slug, description, link, lastBuildDate, items } = rssParser(feed);
 
   const channelId = await db.channels.add({
     title,
+    feedUrl,
     slug,
     description,
     link,
@@ -28,14 +29,14 @@ async function fetchData() {
       ...i,
       channelId,
       fetchDate: Date.now(),
-      read: false,
+      read: 0 as 0,
     }));
     db.items.bulkAdd(itemsWithRel);
   }
 }
 
 export default async function seedData() {
-  false && fetchData();
+  true && fetchData();
 }
 
 false && seedData();
