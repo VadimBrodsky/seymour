@@ -5,14 +5,18 @@ import logger from '../utils/logger';
 
 const log = logger.setLevel('feed-sync');
 
-export async function syncFeedsWorker() {
+export async function syncFeedsWorker(id?: number) {
   log('starting feed sync');
 
   try {
-    const channels = await db.channels.toArray();
+    const channels = id ? [await db.channels.get(id)] : await db.channels.toArray();
     log('channels in db', channels.length);
 
     channels.forEach(async (channel) => {
+      if (!channel) {
+        return;
+      }
+
       log('fetching channel', channel.id);
       const feed = await fetcher(channel.feedUrl);
       log('fetched the feed', !!feed);
