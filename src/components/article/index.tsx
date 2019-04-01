@@ -17,7 +17,7 @@ function Article({ selectedArticle }: Props) {
   ) : (
     <ArticleWrapper>
       <ArticleHeader title={selectedArticle.title} />
-      <ArticleFrame markup={selectedArticle.content} title={selectedArticle.title} />
+      <ArticleFrame markup={selectedArticle.content || selectedArticle.description} title={selectedArticle.title} />
     </ArticleWrapper>
   );
 }

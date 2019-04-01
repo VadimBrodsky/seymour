@@ -8,10 +8,10 @@ interface Props {
 
 export default function ChannelsNav({ channels }: Props) {
   return (
-    <ul>
+    <ul className="list-reset">
       {channels.map((channel) => (
-        <li key={channel.id}>
-          <Link to={`/channel/${channel.slug}`}>
+        <li key={channel.id} className="mb-2">
+          <Link to={`/channel/${channel.slug}`} className="no-underline text-black text-sm">
             {channel.title}
           </Link>
         </li>

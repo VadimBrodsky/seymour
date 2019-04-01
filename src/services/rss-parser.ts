@@ -1,3 +1,5 @@
+import slugify from '../utils/slugify';
+
 const getText = (node: Element | null): string =>
   node && node.textContent ? node.textContent : '';
 
@@ -5,12 +7,13 @@ export default function rssParser(feed: string): RSSChannel {
   const parser = new DOMParser();
   const doc = parser.parseFromString(feed, 'application/xml');
 
-  return {
+  const parsedData = {
     title: getText(doc.querySelector('channel title')),
-    slug: (getText(doc.querySelector('channel title')) || '').toLowerCase(),
+    slug: slugify((getText(doc.querySelector('channel title')) || '')),
     description: getText(doc.querySelector('channel description')),
     link: getText(doc.querySelector('channel link')),
     lastBuildDate: Date.parse(getText(doc.querySelector('channel lastBuildDate'))),
+    lastFetched: Date.now(),
     items: Array.from(doc.querySelectorAll('item'), (item) => ({
       title: getText(item.querySelector('title')),
       slug: new URL(getText(item.querySelector('link'))).pathname.replace(/\//g, ''),
@@ -21,6 +24,12 @@ export default function rssParser(feed: string): RSSChannel {
       content: getText(item.querySelector('encoded')),
     })),
   };
+
+  if (parsedData.title === '' || parsedData.link === '') {
+    throw new Error('Could not parse the XML feed');
+  }
+
+  return parsedData;
 }
 
 export interface RSSChannel {
@@ -29,6 +38,7 @@ export interface RSSChannel {
   description: string;
   link: string;
   lastBuildDate: number;
+  lastFetched: number;
   items?: RSSItem[];
 }
 

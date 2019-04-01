@@ -1,6 +1,11 @@
+import { CORS_PROXY_URL } from '../utils/config';
+
 export default async function fetcher(url: string) {
   try {
-    const res = await fetch(url);
+    const corsProxy = ''
+    const res = await fetch(`${CORS_PROXY_URL}/${url}`, {
+      mode: 'cors', // no-cors
+    });
 
     if (!res.ok) {
       throw new Error('Network response was not ok.');
@@ -8,6 +13,6 @@ export default async function fetcher(url: string) {
 
     return await res.text();
   } catch (e) {
-    console.error('Failed to fetch', e);
+    throw new Error(e.message);
   }
 }

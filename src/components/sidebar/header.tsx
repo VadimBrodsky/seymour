@@ -7,7 +7,7 @@ interface Props {
 
 export default function SidebarHeader({ title }: Props) {
   return (
-    <h1 className="text-lg">
+    <h1 className="text-lg mb-2">
       <Link to="/" className="no-underline text-black">
         {title}
       </Link>

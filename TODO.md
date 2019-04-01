@@ -4,7 +4,8 @@
 - [X] Router
 - [X] Global state - Redux
 - [X] Background fetching via web / service worker
-- [ ] Add feeds
+- [X] Add feeds
+- [ ] Atom / Feedburner parsing
 - [ ] Read / Unread marker and filter
 - [X] Persistance - IndexDB
 - [ ] Night mode

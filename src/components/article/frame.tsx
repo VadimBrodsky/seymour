@@ -6,7 +6,10 @@ export default function ArticleFrame({ title, markup }: { title: string, markup:
   React.useEffect(() => {
     if (iframeEl && iframeEl.current) {
       // @ts-ignore
-      const iframeDoc = iframeEl.current.contentWindow.document;
+      const iframeDoc = iframeEl.current.contentDocument;
+      // @ts-ignore
+      const iframeWindow = iframeEl.current.contentWindow;
+
       iframeDoc.open();
       iframeDoc.write(markup);
       iframeDoc.close();
@@ -16,6 +19,8 @@ export default function ArticleFrame({ title, markup }: { title: string, markup:
       base.target = "_blank";
       iframeDoc.head.appendChild(base);
       iframeDoc.body.id = 'article';
+
+      iframeWindow.scrollTo(0,0);
 
       const styles = document.createElement('style');
       styles.innerText = 'body { margin: 0; padding: 0 0.75rem 0 0.75rem; }';
