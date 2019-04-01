@@ -15,7 +15,7 @@ export default function SubscriptionLoader(props: Props) {
   };
 
   return (
-    <>
+    <div>
       <h2 className="text-lg mb-1">Subscribe to a new RSS Channel</h2>
       <form className="w-full max-w-md" onSubmit={props.onSubmit}>
         <div className="flex items-center border-b border-b-2 border-blue py-2">
@@ -45,8 +45,8 @@ export default function SubscriptionLoader(props: Props) {
           </button>
         </div>
 
-        {props.error && <p className="text-red text-xs italic">{props.error}</p>}
+        {props.error && <p className="text-red text-sm italic py-2">{props.error}</p>}
       </form>
-    </>
+    </div>
   );
 }
