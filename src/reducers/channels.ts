@@ -1,7 +1,8 @@
 import {
-  RECEIVE_CHANNELS,
+  CLEAR_LOADED_CHANNEL,
   LOAD_CHANNEL,
   LOAD_CHANNEL_ERROR,
+  RECEIVE_CHANNELS,
   SUBSCRIBE_CHANNEL,
   State,
   Actions,
@@ -20,6 +21,12 @@ export default function channels(state: State = { loaded: [] }, action: Actions)
         newChannel: action.channel,
         newChannelError: '',
       };
+    case CLEAR_LOADED_CHANNEL:
+      return {
+        ...state,
+        newChannel: undefined,
+        newChannelError: '',
+      }
     case LOAD_CHANNEL_ERROR:
       return {
         ...state,

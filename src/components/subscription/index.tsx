@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { AppState } from '../../reducers';
-import { handleLoadChannel, handleSubscribeToChannel } from '../../actions/channels';
+import { handleLoadChannel, handleSubscribeToChannel, clearLoadedChannel } from '../../actions/channels';
 import SubscriptionWrapper from './wrapper';
 import SubscriptionLoader from './subscription-loader';
 import SubscriptionInfo from './subscription-info';
@@ -24,6 +24,11 @@ function Subscription(props: Props) {
     }
   };
 
+  const onClear = () => {
+    props.dispatch(clearLoadedChannel());
+    setUrl('');
+  }
+
   const handleSubscribe = () => {
     setUrl('');
     props.newChannel &&
@@ -36,6 +41,7 @@ function Subscription(props: Props) {
         value={url}
         onSubmit={onSubmit}
         onInputValue={setUrl}
+        onClear={onClear}
         error={props.error}
       />
 

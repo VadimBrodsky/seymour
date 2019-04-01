@@ -8,6 +8,7 @@ import { syncFeedsWorker } from '../services/feed-sync.worker';
 // Actions
 export const RECEIVE_CHANNELS = 'RECEIVE_CHANNELS';
 export const LOAD_CHANNEL = 'LOAD_CHANNEL';
+export const CLEAR_LOADED_CHANNEL = 'CLEAR_LOADED_CHANNEL';
 export const LOAD_CHANNEL_ERROR = 'SUBSCRIBTION_ERROR';
 export const SUBSCRIBE_CHANNEL = 'SUBSCRIBE_CHANNEL';
 
@@ -20,6 +21,10 @@ export const receiveChannels = (channels: State['loaded']): Actions => ({
 export const loadChannel = (channel: RSSChannel): Actions => ({
   type: LOAD_CHANNEL,
   channel,
+});
+
+export const clearLoadedChannel = (): Actions => ({
+  type: CLEAR_LOADED_CHANNEL,
 });
 
 export const subscribtionError = (message: string) => ({
@@ -87,5 +92,6 @@ export interface State {
 export type Actions =
   | { type: typeof LOAD_CHANNEL; channel: RSSChannel }
   | { type: typeof SUBSCRIBE_CHANNEL; channel: State['loaded'][0] }
+  | { type: typeof CLEAR_LOADED_CHANNEL }
   | { type: typeof LOAD_CHANNEL_ERROR; message: string }
   | { type: typeof RECEIVE_CHANNELS; channels: State['loaded'] };

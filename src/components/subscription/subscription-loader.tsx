@@ -4,6 +4,7 @@ interface Props {
   error?: string;
   onInputValue: (value: string) => unknown;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => unknown;
+  onClear: () => unknown;
   value: string;
 }
 
@@ -16,24 +17,33 @@ export default function SubscriptionLoader(props: Props) {
   return (
     <>
       <h2 className="text-lg mb-1">Subscribe to a new RSS Channel</h2>
-      <form className="" onSubmit={props.onSubmit}>
-        <label htmlFor="url" className="block text-grey-darker text-sm font-bold mb-2">
-          Feed URL
-        </label>
-        <input
-          id="url"
-          value={props.value}
-          onChange={handleOnChange}
-          type="text"
-          className="shadow appearance-none border rounded py-2 px-3 mr-1 text-grey-darker focus:outline-none focus:shadow-outline"
-          placeholder="https://overreacted.io/rss.xml"
-        />
-        <button
-          className="bg-blue shadow-md hover:bg-blue-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="submit"
-        >
-          Load Feed
-        </button>
+      <form className="w-full max-w-md" onSubmit={props.onSubmit}>
+        <div className="flex items-center border-b border-b-2 border-blue py-2">
+          <input
+            id="url"
+            value={props.value}
+            onChange={handleOnChange}
+            type="text"
+            className="appearance-none bg-transparent border-none w-3/4 text-grey-darker mr-3 py-1 px-2 leading-tight focus:outline-none"
+            placeholder="Feed URL"
+            aria-label="Feed URL"
+          />
+
+          <button
+            className="flex-no-shring bg-blue hover:bg-blue-dark border-blue hover:border-blue-dark text-sm border-4 text-white py-1 px-2 rounded"
+            type="submit"
+          >
+            Load Feed
+          </button>
+
+          <button
+            onClick={props.onClear}
+            className="flex-no-shrink border-transparent border-4 text-blue hover:text-blue-darker text-sm py-1 px-2 rounded"
+            type="button"
+          >
+            Clear
+          </button>
+        </div>
 
         {props.error && <p className="text-red text-xs italic">{props.error}</p>}
       </form>

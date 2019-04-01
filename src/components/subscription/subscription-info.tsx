@@ -24,6 +24,9 @@ export default function SubscriptionInfo(props: Props) {
       >
         Subscribe
       </button>
+      <button type="button" className="bg-blue shadow-md hover:bg-blue-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+      Clear
+      </button>
     </>
   );
 }
