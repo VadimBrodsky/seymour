@@ -9,12 +9,8 @@ import App from './App';
 import reducer from './reducers';
 import middleware from './middleware';
 import * as serviceWorker from './serviceWorker';
-import seedData from './services/seed';
 import startFeedSync, { syncFeedsWorker } from './services/feed-sync.worker';
 import { FEED_SYNC_INTERVAL } from './utils/config';
-
-//@ts-ignore
-window.seedData = seedData;
 
 //@ts-ignore
 window.syncFeedsWorker = syncFeedsWorker;
