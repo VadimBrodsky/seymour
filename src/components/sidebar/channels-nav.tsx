@@ -17,9 +17,11 @@ export default function ChannelsNav({ channels }: Props) {
           >
             {channel.title}{' '}
           </Link>
+          {channel.unreadCount > 0 && (
             <strong className="bg-grey-lighter rounded-full px-2 py-1 text-xs font-semibold text-grey-darker inline-block ml-2">
               {channel.unreadCount}
             </strong>
+          )}
         </li>
       ))}
     </ul>
