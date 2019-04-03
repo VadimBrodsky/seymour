@@ -26,6 +26,8 @@ export interface Channel {
   link: string;
   lastBuildDate: number;
   lastFetched: number;
+  readCount: number;
+  unreadCount: number;
 }
 
 export interface Item {

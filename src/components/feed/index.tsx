@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { handleReceiveItems } from '../../actions/items';
+import { handleReceiveItems, selectItems } from '../../actions/items';
+import { selectCurrentChannel } from '../../actions/channels';
 import FeedList from './list';
 import FeedsWrapper from './wrapper';
 import FeedsHeader from './header';
@@ -35,25 +36,9 @@ function Feeds({ channel, dispatch, items, match }: Props) {
 const mapStateToProps = (
   state: AppState,
   props: RouteComponentProps<{ feedId: string }>,
-) => {
-  let channel;
-  let items;
-
-  if (state.channels.loaded.length > 0) {
-    const fallbackId = state.channels.loaded[0];
-    const foundChannel = state.channels.loaded.find(
-      (channel: typeof state.channels.loaded[0]) =>
-        channel.slug === props.match.params.feedId,
-    );
-
-    channel = foundChannel ? foundChannel : fallbackId;
-  }
-
-  if (state.items.loaded.length > 0) {
-    items = state.items.loaded;
-  }
-
-  return { channel, items };
-};
+) => ({
+  channel: selectCurrentChannel(state, props.match.params.feedId),
+  items: selectItems(state),
+});
 
 export default withRouter(connect(mapStateToProps)(Feeds));
