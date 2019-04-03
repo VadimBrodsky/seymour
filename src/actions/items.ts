@@ -2,6 +2,7 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import db from '../services/db';
 import { RSSItem } from '../services/rss-parser';
+import { AppState } from '../reducers';
 
 // Actions
 export const RECEIVE_ITEMS = 'RECEIVE_ITEMS';
@@ -36,7 +37,6 @@ export const handleReceiveItems = (channelId: number) => {
 export const handleMarkRead = (item: State['loaded'][0]) => {
   return async (dispatch: ThunkDispatch<State, void, Action>) => {
     const updatedRecords = await db.items.update(item.id, { read: 1 });
-    console.log(updatedRecords);
 
     if (updatedRecords) {
       dispatch(markRead(item));
@@ -45,6 +45,23 @@ export const handleMarkRead = (item: State['loaded'][0]) => {
     }
   };
 };
+
+// Selectors
+export const selectItems = (state: AppState) => {
+  let items;
+
+  if (state.items.loaded.length > 0) {
+    items = state.items.loaded;
+  }
+
+  return items;
+};
+
+export const selectCurrentItem = (state: AppState, articleId: State['loaded'][0]['slug']) =>
+  state.items.loaded &&
+  state.items.loaded.find(
+    (item: AppState['items']['loaded'][0]) => item.slug === articleId,
+  );
 
 // Types
 export interface State {

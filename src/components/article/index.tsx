@@ -6,18 +6,21 @@ import ArticleHeader from './header';
 import ArticleFrame from './frame';
 import Loading from '../shared/loading';
 import { AppState } from '../../reducers';
-import { handleMarkRead } from '../../actions/items';
+import { handleMarkRead, selectCurrentItem } from '../../actions/items';
+import { handleUpdateReadCount, selectCurrentChannel } from '../../actions/channels';
 
 interface Props {
   dispatch: (arg: any) => {};
   selectedArticle?: AppState['items']['loaded'][0];
+  selectedChannel?: AppState['channels']['loaded'][0];
 }
 
-function Article({ dispatch, selectedArticle }: Props) {
+function Article({ dispatch, selectedArticle, selectedChannel }: Props) {
   React.useEffect(
     () => {
-      if (selectedArticle && selectedArticle.read === 0) {
+      if (selectedArticle && selectedArticle.read === 0 && selectedChannel) {
         dispatch(handleMarkRead(selectedArticle));
+        dispatch(handleUpdateReadCount(selectedChannel.id));
       }
     },
     [selectedArticle],
@@ -36,18 +39,12 @@ function Article({ dispatch, selectedArticle }: Props) {
   );
 }
 
-function mapStateToProps(
+const mapStateToProps = (
   state: AppState,
-  props: RouteComponentProps<{ articleId: string }>,
-) {
-  return {
-    selectedArticle:
-      state.items.loaded &&
-      state.items.loaded.find(
-        (item: AppState['items']['loaded'][0]) =>
-          item.slug === props.match.params.articleId,
-      ),
-  };
-}
+  props: RouteComponentProps<{ articleId: string; feedId: string }>,
+) => ({
+  selectedArticle: selectCurrentItem(state, props.match.params.articleId),
+  selectedChannel: selectCurrentChannel(state, props.match.params.feedId),
+});
 
 export default withRouter(connect(mapStateToProps)(Article));

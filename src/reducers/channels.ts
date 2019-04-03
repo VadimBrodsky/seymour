@@ -4,6 +4,8 @@ import {
   LOAD_CHANNEL_ERROR,
   RECEIVE_CHANNELS,
   SUBSCRIBE_CHANNEL,
+  UPDATE_READ_COUNT,
+  UPDATE_READ_COUNT_ERROR,
   State,
   Actions,
 } from '../actions/channels';
@@ -26,7 +28,7 @@ export default function channels(state: State = { loaded: [] }, action: Actions)
         ...state,
         newChannel: undefined,
         newChannelError: '',
-      }
+      };
     case LOAD_CHANNEL_ERROR:
       return {
         ...state,
@@ -37,7 +39,21 @@ export default function channels(state: State = { loaded: [] }, action: Actions)
         ...state,
         loaded: [...state.loaded, action.channel],
         newChannel: undefined,
-      }
+      };
+    case UPDATE_READ_COUNT:
+      return {
+        ...state,
+        loaded: state.loaded.map(
+          (channel) =>
+            channel.id !== action.channelId
+              ? channel
+              : {
+                  ...channel,
+                  readCount: channel.readCount + 1,
+                  unreadCount: channel.unreadCount - 1,
+                },
+        ),
+      };
     default:
       return state;
   }
