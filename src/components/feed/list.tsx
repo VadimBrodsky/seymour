@@ -14,7 +14,7 @@ export default function FeedList({ items, baseUrl }: Props) {
         <li key={item.slug} className="text-sm border-b-2 border-grey border-solid">
           <Link
             to={`${baseUrl}/${item.slug}`}
-            className="no-underline text-black py-3 block"
+            className={`no-underline py-3 block ${ item.read ? 'text-grey-dark': 'text-black' }`}
           >
             {item.title}
           </Link>
