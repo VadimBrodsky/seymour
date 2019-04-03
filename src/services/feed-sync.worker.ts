@@ -1,4 +1,4 @@
-import db, { Item } from './db';
+import db, { Item, Channel } from './db';
 import fetcher from './fetcher';
 import rssParser, { RSSItem } from './rss-parser';
 import logger from '../utils/logger';
@@ -24,9 +24,12 @@ export async function syncFeedsWorker(id?: number) {
 
       parsedFeed &&
         parsedFeed.items &&
-        parsedFeed.items.forEach(
-          async (item) => (await checkItem(item)) && saveItem(item, channel.id as number),
-        );
+        parsedFeed.items.forEach(async (item) => {
+          if (await checkItem(item)) {
+            saveItem(item, channel.id as number);
+            updateChannelUnreadCount(channel);
+          }
+        });
     });
   } catch (e) {
     logger.error('Failed to sync feeds', e.message);
@@ -50,6 +53,16 @@ function saveItem(item: RSSItem, channelId: number): Promise<number> {
     fetchDate: Date.now(),
     read: 0,
   });
+}
+
+function updateChannelUnreadCount(channel: Channel): Promise<number> {
+  log('updating unread count');
+
+  if (channel.id) {
+    return db.channels.update(channel.id, { unreadCount: channel.unreadCount + 1 });
+  }
+
+  return Promise.resolve(0);
 }
 
 export default function startFeedSync(interval: number = 10000) {
