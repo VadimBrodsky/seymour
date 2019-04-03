@@ -6,18 +6,32 @@ import ArticleHeader from './header';
 import ArticleFrame from './frame';
 import Loading from '../shared/loading';
 import { AppState } from '../../reducers';
+import { handleMarkRead } from '../../actions/items';
 
 interface Props {
+  dispatch: (arg: any) => {};
   selectedArticle?: AppState['items']['loaded'][0];
 }
 
-function Article({ selectedArticle }: Props) {
+function Article({ dispatch, selectedArticle }: Props) {
+  React.useEffect(
+    () => {
+      if (selectedArticle && selectedArticle.read === 0) {
+        dispatch(handleMarkRead(selectedArticle));
+      }
+    },
+    [selectedArticle],
+  );
+
   return !selectedArticle ? (
     <Loading />
   ) : (
     <ArticleWrapper>
       <ArticleHeader title={selectedArticle.title} />
-      <ArticleFrame markup={selectedArticle.content || selectedArticle.description} title={selectedArticle.title} />
+      <ArticleFrame
+        markup={selectedArticle.content || selectedArticle.description}
+        title={selectedArticle.title}
+      />
     </ArticleWrapper>
   );
 }
