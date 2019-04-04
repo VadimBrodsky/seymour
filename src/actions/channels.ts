@@ -81,8 +81,10 @@ export const handleSubscribeToChannel = (channel: RSSChannel, url: string) => {
       lastBuildDate: channel.lastBuildDate,
       lastFetched: Date.now(),
       readCount: 0,
-      unreadCount: channel.items ? channel.items.length : 0,
+      unreadCount: 0,
     };
+
+    console.log({channelObject});
 
     const id = await db.channels.add(channelObject);
 

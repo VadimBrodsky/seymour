@@ -22,12 +22,18 @@ export async function syncFeedsWorker(id?: number) {
       log('fetched the feed', !!feed);
       const parsedFeed = feed && rssParser(feed);
 
+      let count = 0;
+
       parsedFeed &&
         parsedFeed.items &&
-        parsedFeed.items.forEach(async (item) => {
+        parsedFeed.items.forEach(async (item, index, array) => {
           if (await checkItem(item)) {
+            count += 1;
             saveItem(item, channel.id as number);
-            updateChannelUnreadCount(channel);
+          }
+
+          if (index === array.length - 1) {
+            updateChannelUnreadCount(channel, count);
           }
         });
     });
@@ -55,11 +61,11 @@ function saveItem(item: RSSItem, channelId: number): Promise<number> {
   });
 }
 
-function updateChannelUnreadCount(channel: Channel): Promise<number> {
+function updateChannelUnreadCount(channel: Channel, addCount: number): Promise<number> {
   log('updating unread count');
 
   if (channel.id) {
-    return db.channels.update(channel.id, { unreadCount: channel.unreadCount + 1 });
+    return db.channels.update(channel.id, { unreadCount: channel.unreadCount + addCount });
   }
 
   return Promise.resolve(0);
