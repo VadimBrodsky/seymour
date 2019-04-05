@@ -6,40 +6,53 @@ import logger from '../utils/logger';
 const log = logger.setLevel('feed-sync');
 
 export async function syncFeedsWorker(id?: number) {
-  log('starting feed sync');
-
   try {
-    const channels = id ? [await db.channels.get(id)] : await db.channels.toArray();
-    log('channels in db', channels.length);
+    log('starting feed sync');
+    const channelPromises = await fetchFeeds(id);
 
-    channels.forEach(async (channel) => {
-      if (!channel) {
+    channelPromises.forEach(async (channelPromise) => {
+      const channel = await channelPromise;
+
+      if (!channel || !channel.items) {
         return;
       }
 
-      log('fetching channel', channel.id);
-      const feed = await fetcher(channel.feedUrl);
-      log('fetched the feed', !!feed);
-      const parsedFeed = feed && rssParser(feed);
-
       let count = 0;
+      channel.items.forEach(async (item, index, array) => {
+        if (await checkItem(item)) {
+          count += 1;
+          saveItem(item, channel.id as number);
+        }
 
-      parsedFeed &&
-        parsedFeed.items &&
-        parsedFeed.items.forEach(async (item, index, array) => {
-          if (await checkItem(item)) {
-            count += 1;
-            saveItem(item, channel.id as number);
-          }
-
-          if (index === array.length - 1) {
-            updateChannelUnreadCount(channel, count);
-          }
-        });
+        const lastIteration = index === array.length - 1;
+        if (lastIteration) {
+          updateChannelUnreadCount(channel.id, channel.unreadCount + count);
+        }
+      });
     });
   } catch (e) {
     logger.error('Failed to sync feeds', e.message);
   }
+}
+
+async function fetchFeeds(id?: number) {
+  const channels = id ? [await db.channels.get(id)] : await db.channels.toArray();
+  log('channels in db', channels.length);
+
+  return channels.map(async (channel) => {
+    if (!channel) {
+      return null;
+    }
+    log('fetching channel', channel.id);
+    const feed = await fetcher(channel.feedUrl);
+
+    log('fetched the feed', !!feed);
+    return {
+      ...rssParser(feed),
+      id: channel.id as number,
+      unreadCount: channel.unreadCount,
+    };
+  });
 }
 
 async function checkItem(item: RSSItem): Promise<boolean> {
@@ -61,14 +74,12 @@ function saveItem(item: RSSItem, channelId: number): Promise<number> {
   });
 }
 
-function updateChannelUnreadCount(channel: Channel, addCount: number): Promise<number> {
+function updateChannelUnreadCount(channelId: number, newCount: number): Promise<number> {
   log('updating unread count');
 
-  if (channel.id) {
-    return db.channels.update(channel.id, { unreadCount: channel.unreadCount + addCount });
-  }
-
-  return Promise.resolve(0);
+  return db.channels.update(channelId, {
+    unreadCount: newCount,
+  });
 }
 
 export default function startFeedSync(interval: number = 10000) {
