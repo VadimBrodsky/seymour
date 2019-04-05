@@ -1,0 +1,1 @@
+export const SHARED_ACTION = 'SHARED_ACTION';
