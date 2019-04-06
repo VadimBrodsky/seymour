@@ -3,8 +3,8 @@ import { ThunkDispatch } from 'redux-thunk';
 import db from '../services/db';
 import fetcher from '../services/fetcher';
 import rssParser, { RSSChannel } from '../services/rss-parser';
-import { syncFeedsWorker } from '../services/feed-sync.worker';
 import { AppState } from '../reducers/index';
+import { syncFeedsWorker } from '../services/feed-sync.worker';
 
 // Actions
 export const RECEIVE_CHANNELS = 'RECEIVE_CHANNELS';
@@ -84,12 +84,11 @@ export const handleSubscribeToChannel = (channel: RSSChannel, url: string) => {
       unreadCount: 0,
     };
 
-    console.log({ channelObject });
-
     const id = await db.channels.add(channelObject);
-
     dispatch(subscribeToChannel({ ...channelObject, id }));
-    syncFeedsWorker(id);
+
+    await syncFeedsWorker(id);
+    dispatch(handleReceiveChannels());
   };
 };
 

@@ -9,27 +9,22 @@ export async function syncFeedsWorker(id?: number) {
   try {
     log('starting feed sync');
     const channelPromises = await fetchFeeds(id);
+    const channels = await Promise.all(channelPromises);
 
-    channelPromises.forEach(async (channelPromise) => {
-      const channel = await channelPromise;
-
+    for (const channel of channels) {
       if (!channel || !channel.items) {
-        return;
+        continue;
       }
 
       let count = 0;
-      channel.items.forEach(async (item, index, array) => {
+      for (const item of channel.items) {
         if (await checkItem(item)) {
           count += 1;
-          saveItem(item, channel.id as number);
+          await saveItem(item, channel.id);
         }
-
-        const lastIteration = index === array.length - 1;
-        if (lastIteration) {
-          updateChannelUnreadCount(channel.id, channel.unreadCount + count);
-        }
-      });
-    });
+      }
+      await updateChannelUnreadCount(channel.id, channel.unreadCount + count);
+    }
   } catch (e) {
     logger.error('Failed to sync feeds', e.message);
   }
