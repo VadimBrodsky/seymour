@@ -3,8 +3,8 @@ import { ThunkDispatch } from 'redux-thunk';
 import db from '../services/db';
 import fetcher from '../services/fetcher';
 import rssParser, { RSSChannel } from '../services/rss-parser';
-import { syncFeedsWorker } from '../services/feed-sync.worker';
 import { AppState } from '../reducers/index';
+import { syncFeedsWorker } from '../services/feed-sync.worker';
 
 // Actions
 export const RECEIVE_CHANNELS = 'RECEIVE_CHANNELS';
@@ -14,6 +14,7 @@ export const LOAD_CHANNEL_ERROR = 'SUBSCRIBTION_ERROR';
 export const SUBSCRIBE_CHANNEL = 'SUBSCRIBE_CHANNEL';
 export const UPDATE_READ_COUNT = 'UPDATE_READ_COUNT';
 export const UPDATE_READ_COUNT_ERROR = 'UPDATE_READ_COUNT_ERROR';
+export const SYNC_ALL_CHANNELS = 'SYNC_ALL_CHANNELS';
 
 // Action Creators
 export const receiveChannels = (channels: State['loaded']): Actions => ({
@@ -81,15 +82,24 @@ export const handleSubscribeToChannel = (channel: RSSChannel, url: string) => {
       lastBuildDate: channel.lastBuildDate,
       lastFetched: Date.now(),
       readCount: 0,
-      unreadCount: channel.items ? channel.items.length : 0,
+      unreadCount: 0,
     };
 
     const id = await db.channels.add(channelObject);
-
     dispatch(subscribeToChannel({ ...channelObject, id }));
-    syncFeedsWorker(id);
+
+    await syncFeedsWorker(id);
+    dispatch(handleReceiveChannels());
   };
 };
+
+export const handleSyncAllChannels = () => {
+  return async (dispatch: any) => {
+    await syncFeedsWorker();
+    dispatch(handleReceiveChannels());
+  }
+};
+
 
 export const handleUpdateReadCount = (channelId: State['loaded'][0]['id']) => {
   return async (dispatch: any) => {
@@ -100,14 +110,15 @@ export const handleUpdateReadCount = (channelId: State['loaded'][0]['id']) => {
         throw new Error(`Could not find channel with id ${channelId}`);
       }
 
-      const updatedChannels = await db.channels.update(channelId, {
+      const updatedChannels = db.channels.update(channelId, {
         readCount: channel.readCount + 1,
         unreadCount: channel.unreadCount - 1,
       });
 
-      if (updatedChannels) {
-        dispatch(updateReadCount(channelId));
-      } else {
+      // optimisticly update the UI
+      dispatch(updateReadCount(channelId));
+
+      if (await !updatedChannels) {
         throw new Error(`Could not update channel with id ${channelId}`);
       }
     } catch (e) {
@@ -123,16 +134,14 @@ export const selectCurrentChannel = (state: AppState, feedId: string) => {
   if (state.channels.loaded.length > 0) {
     const fallbackId = state.channels.loaded[0];
     const foundChannel = state.channels.loaded.find(
-      (channel: State['loaded'][0]) =>
-        channel.slug === feedId,
+      (channel: State['loaded'][0]) => channel.slug === feedId,
     );
 
     channel = foundChannel ? foundChannel : fallbackId;
   }
 
-
   return channel;
-}
+};
 
 // Types
 export interface State {
