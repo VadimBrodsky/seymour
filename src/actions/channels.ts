@@ -14,6 +14,7 @@ export const LOAD_CHANNEL_ERROR = 'SUBSCRIBTION_ERROR';
 export const SUBSCRIBE_CHANNEL = 'SUBSCRIBE_CHANNEL';
 export const UPDATE_READ_COUNT = 'UPDATE_READ_COUNT';
 export const UPDATE_READ_COUNT_ERROR = 'UPDATE_READ_COUNT_ERROR';
+export const SYNC_ALL_CHANNELS = 'SYNC_ALL_CHANNELS';
 
 // Action Creators
 export const receiveChannels = (channels: State['loaded']): Actions => ({
@@ -91,6 +92,14 @@ export const handleSubscribeToChannel = (channel: RSSChannel, url: string) => {
     dispatch(handleReceiveChannels());
   };
 };
+
+export const handleSyncAllChannels = () => {
+  return async (dispatch: any) => {
+    await syncFeedsWorker();
+    dispatch(handleReceiveChannels());
+  }
+};
+
 
 export const handleUpdateReadCount = (channelId: State['loaded'][0]['id']) => {
   return async (dispatch: any) => {
