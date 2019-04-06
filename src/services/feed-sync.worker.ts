@@ -52,7 +52,7 @@ async function fetchFeeds(id?: number) {
 
 async function checkItem(item: RSSItem): Promise<boolean> {
   const existingItem = await db.items.where({ guid: item.guid }).first();
-  const alreadySaved = existingItem && item.pubDate === existingItem.pubDate;
+  const alreadySaved = existingItem;
   log('item already saved', alreadySaved);
 
   return !alreadySaved;
